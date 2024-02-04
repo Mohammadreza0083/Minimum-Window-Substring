@@ -2,7 +2,6 @@
 {
     internal interface IMinimumWindowSubstring
     {
-        List<string> Substrings(int lenght , string input);
-        string MinWindowSubstring(List<string> substrings , string t);
+        string MinWindowSubstring(string s , string t);
     }
 }
