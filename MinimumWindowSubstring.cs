@@ -2,46 +2,55 @@
 {
     public class MinimumWindowSubstring : IMinimumWindowSubstring
     {
-        public string MinWindowSubstring(string s, string t)
+        public List<string> Substrings(int lenght, string input)
         {
-            if (string.IsNullOrEmpty(s) || string.IsNullOrEmpty(t))
-                return "";
+            if (string.IsNullOrEmpty(input) || lenght <= 0)
+                return new List<string>();
 
-            var tChars = new Queue<char>(t);
-            int required = tChars.Count;
-            int minStart = 0, minEnd = int.MaxValue;
+            int chunckSize = lenght + 1;
+            List<string> substrings = new List<string>();
 
-            for (int start = 0, end = 0; end < s.Length; end++)
+            for (int i = 0; i < input.Length - lenght + 1; i++)
             {
-                var c = s[end];
-                if (tChars.Contains(c))
+                if (i + chunckSize <= input.Length)
                 {
-                    tChars.Dequeue();
-                    required--;
-                }
-
-                while (required == 0)
-                {
-                    if (end - start < minEnd - minStart)
-                    {
-                        minStart = start;
-                        minEnd = end;
-                    }
-
-                    var firstChar = s[start];
-                    start++;
-
-                    if (tChars.Contains(firstChar))
-                    {
-                        tChars.Enqueue(firstChar);
-                        required++;
-                    }
+                    substrings.Add(input[i..(i + lenght)]);
+                    substrings.Add(input[i..(i + chunckSize)]);
                 }
             }
 
-            return minEnd == int.MaxValue ? "" : s.Substring(minStart, minEnd - minStart + 1);
+            return substrings;
         }
+        public string MinWindowSubstring(List<string> substrings, string t)
+        {
+            if (substrings.Count == 0 || string.IsNullOrEmpty(t))
+                return "";
+            List<char> Tchars = t.ToList();
+            foreach (var item in substrings)
+            {
+                List<char> Helper = new List<char>(Tchars);
+                foreach (char c in item)
+                {
+                    if (Helper.Contains(c))
+                    {
+                        Helper.Remove(c);
+                    }
+                    if (Helper.Count == 0)
+                    {
+                        return item;
+                    }
+                }
+            }
+            return "";
 
-
+        }
+        public string MinWindowSubstring(string s, string t)
+        {
+            List<string> SSubstring = Substrings(t.Length,s);
+            return MinWindowSubstring(SSubstring, s);
+        }
     }
+
+
+
 }
